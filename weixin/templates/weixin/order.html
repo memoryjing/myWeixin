@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<title>
+	订单填写
+	</title>
+	<link rel="stylesheet" type="text/css" href="/static/css/weui/weui.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/weui/weui.min.css">
+	<script src="/static/js/weui/example.js"></script>
+	<script src="/static/js/weui/zepto.min.js"></script>
+	<script src="/static/js/weui/check.js"></script>
+</head>
+<body>
+	<div class="page">
+
+	<form action="{%url 'weixin:orderCreate'%}" method="post">
+		<div class="weui-cell">
+			<div class="weui-cell__hd"><label class="weui-label">姓名</label></div>
+			<div class="weui-cell__bd">
+				<input class="weui-input" type="text" " placeholder="请输入姓名" name="name"/ >
+				<p class="msg">汉字</p>
+			</div>
+			<div>
+				<b style="visibility:'unvisiable'" id="count">0个字符</b>
+			</div>
+		</div>
+            
+		<div class="weui-cell weui-cell_vcode">
+			<div class="weui-cell__hd">
+				<label class="weui-label">联系方式</label>
+			</div>
+			<div class="weui-cell__bd">
+				<input class="weui-input" type="tel" placeholder="请输入手机号" name="telephoneNumber"/>
+				<p class="msg">7-11位数字</p>
+			</div>
+			<div style="margin:3px 0 10px 0">
+				<label><span></span><em class="active">弱</em><em>中</em><em>强</em></label>
+			</div>
+		</div>
+        <div class="weui-cells__title">商品名称</div>
+        <div class="weui-cells">
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="text" placeholder="请输入商品名称" name="goodsName"/>
+                </div>
+            </div>
+        </div>
+		<div class="weui-cell">
+                <div class="weui-cell__hd"><label class="weui-label">数量</label></div>
+                <div class="weui-cell__bd">
+                    <input class="weui-input" type="number" pattern="[0-9]*" placeholder="请输入商品数量" name="count"/>
+                </div>
+        </div>
+		<input type="submit">
+
+        <div class="weui-btn-area">
+            <a class="weui-btn weui-btn_primary" type="submit" id="showTooltips" href="{%url 'weixin:orderCreate'%}"method="POST">确定</a>
+        </div>
+	</form>
+    </div>
+<script type="text/javascript">
+    $(function(){
+        var $tooltips = $('.js_tooltips');
+
+        $('#showTooltips').on('click', function(){
+            if ($tooltips.css('display') != 'none') return;
+
+            // toptips的fixed, 如果有`animation`, `position: fixed`不生效
+            $('.page.cell').removeClass('slideIn');
+
+            $tooltips.css('display', 'block');
+            setTimeout(function () {
+                $tooltips.css('display', 'none');
+            }, 2000);
+        });
+    });
+</script>
+</body>
+</html>
