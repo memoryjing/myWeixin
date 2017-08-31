@@ -18,11 +18,36 @@
 		<div class="weui-cell">
 			<div class="weui-cell__hd"><label class="weui-label">预订人姓名</label></div>
 			<div class="weui-cell__bd">
-				<input class="weui-input" type="text" " placeholder="请输入姓名" name="name"/ >
+				<input class="weui-input" type="text" placeholder="请输入姓名" name="name"/ >
 				<p class="msg">汉字</p>
 			</div>
 			<div>
-				<b style="visibility:'unvisiable'" id="count">0个字符</b>
+				<b id="count_name">0个字符</b>
+			</div>
+		</div>
+		
+		<div class="weui-cell">
+			<div class="weui-cell__hd"><label class="weui-label">密码</label></div>
+			<div class="weui-cell__bd">
+				<input class="weui-input" type="text" placeholder="请输入密码" name="pwd"/ >
+				<p class="msg"></p>
+			</div>
+			<div style="margin:3px 0 10px 0">
+				<label><span></span><em class="active">弱</em><em>中</em><em>强</em></label>
+			</div>
+			<div>
+				<b id="count_pwd"></b>
+			</div>
+		</div>
+		
+		<div class="weui-cell">
+			<div class="weui-cell__hd"><label class="weui-label">确认密码</label></div>
+			<div class="weui-cell__bd">
+				<input class="weui-input" type="text" disabled="" placeholder="请确认密码" name="pwdConfirm"/ >
+				<p class="msg">字母数字组合6-12位</p>
+			</div>
+			<div>
+				<b id="count_confirm"></b>
 			</div>
 		</div>
             
@@ -34,9 +59,7 @@
 				<input class="weui-input" type="tel" placeholder="请输入手机号" name="telephoneNumber"/>
 				<p class="msg">7-11位数字</p>
 			</div>
-			<div style="margin:3px 0 10px 0">
-				<label><span></span><em class="active">弱</em><em>中</em><em>强</em></label>
-			</div>
+			
 		</div>
         <div class="weui-cells__title">商品名称</div>
         <div class="weui-cells">
