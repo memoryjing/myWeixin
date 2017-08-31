@@ -1,0 +1,8 @@
+Python3.5 django1.11
+数据库：本地Mysql数据库
+
+网页运行方式：
+
+1.cmd进入manage.py同级目录，运行Python manage.py runserver 80命令，启动django自带服务。
+这种方式不能通过微信访问本地服务器。
+2.浏览器输入网址127.0.0.1:80/weixin/main
