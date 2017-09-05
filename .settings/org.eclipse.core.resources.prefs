@@ -1,2 +1,4 @@
 eclipse.preferences.version=1
 encoding//myWeixin/settings.py=utf-8
+encoding//weixin/models.py=utf-8
+encoding//weixin/views.py=utf-8
