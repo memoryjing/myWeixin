@@ -2,6 +2,8 @@
 
 from django.db import models
 
+#数据的删除使用物理删除，，不用逻辑删除
+
 # Create your models here.
 #测试用表
 class Order(models.Model):
@@ -31,9 +33,10 @@ class orders(models.Model):
     client_name= models.CharField(max_length=40,null=False)        #客户名称
     phone = models.CharField(max_length=11,null=False)            #电话
     address = models.CharField(max_length=100,null=False)          #地址
-    remark = models.CharField(max_length=200,null=True,blank=True)          #备注
+    content = models.CharField(max_length=200,null=True,blank=True)          #备注  备注就是用户要填写的内容
     create_time = models.DateTimeField(null=True,blank=True)      #订单创建时间
-    
+    time = models.IntegerField(null=False)                     #? 不可空，数字，1,2,3
+    open_id=models.CharField(max_length=40,null=False)         # ？ open_id, 长度未定？ 不可空
     class Meta:
         ordering=("-create_time",)
 
