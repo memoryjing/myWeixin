@@ -25,7 +25,7 @@ urlpatterns = [
 #     url(r'^ciyun/$', views.ciyun, name='ciyun'),
 #     url(r'^getciyun/$', views.getciyun, name='getciyun'),
     #н╒пе
-    url(r'^main$', views.main, name='main'),
+    url(r'^main/$', views.main, name='main'),
     url(r'^wx/$', views.weixin, name='weixin'),
     url(r'^order/$', views.order, name='order'),
     url(r'^order/create$', views.orderCreate, name='orderCreate'),

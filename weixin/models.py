@@ -30,13 +30,13 @@ class Goods(models.Model):
 
 #订单
 class orders(models.Model):
-    client_name= models.CharField(max_length=40,null=False)        #客户名称
+    client_name= models.CharField(max_length=30,null=False)        #客户名称
     phone = models.CharField(max_length=11,null=False)            #电话
-    address = models.CharField(max_length=100,null=False)          #地址
-    content = models.CharField(max_length=200,null=True,blank=True)          #备注  备注就是用户要填写的内容
+    address = models.CharField(max_length=150,null=False)          #地址
+    content = models.CharField(max_length=500,blank=True)          #备注  备注就是用户要填写的内容
     create_time = models.DateTimeField(null=True,blank=True)      #订单创建时间
-    time = models.IntegerField(null=False)                     #? 不可空，数字，1,2,3
-    open_id=models.CharField(max_length=40,null=False)         # ？ open_id, 长度未定？ 不可空
+    time = models.IntegerField(null=True,blank=True)                     #? 不可空，数字，1,2,3
+    open_id=models.CharField(max_length=100,null=True,blank=True)         # ？ open_id, 长度未定？ 不可空
     class Meta:
         ordering=("-create_time",)
 
