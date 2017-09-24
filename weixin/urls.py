@@ -27,8 +27,9 @@ urlpatterns = [
     #н╒пе
     url(r'^main/$', views.main, name='main'),
     url(r'^wx/$', views.weixin, name='weixin'),
-    url(r'^order/$', views.order, name='order'),
-    url(r'^order/create$', views.orderCreate, name='orderCreate'),
+    url(r'^aj/initOrderForm/$', views.initOrderForm, name='initOrderForm'),
+    url(r'^aj/getOrderByOpenId/$', views.getOrderByOpenId, name='getOrderByOpenId'),
+    url(r'^aj/saveOrder$', views.saveOrder, name='saveOrder'),
     url(r'^order/list$', views.orderList, name='orderList'),
     
 
