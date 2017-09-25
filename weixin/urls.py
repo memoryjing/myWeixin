@@ -30,6 +30,9 @@ urlpatterns = [
     url(r'^aj/initOrderForm/$', views.initOrderForm, name='initOrderForm'),
     url(r'^aj/getOrderByOpenId/$', views.getOrderByOpenId, name='getOrderByOpenId'),
     url(r'^aj/saveOrder$', views.saveOrder, name='saveOrder'),
+    url(r'^aj/cancelOrder', views.cancelOrder, name='cancelOrder'),
+    url(r'^aj/listOrderByParams', views.listOrderByParams, name='listOrderByParams'),
+    url(r'^aj/getTenPage', views.getTenPage, name='getTenPage'),
     url(r'^order/list$', views.orderList, name='orderList'),
     
 

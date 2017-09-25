@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.http import HttpResponse,HttpRequest
 from django.http.response import HttpResponseRedirect
+from django.core.paginator import Paginator
 from urllib.request import urlopen
 from . import models
 from django.shortcuts import render,redirect
@@ -45,6 +46,11 @@ MENU_DATA = {
                     'type': 'click',
                     'name': '我的订单',
                     'key': 'getOrderByOpenId'
+                },
+                {
+                    'type': 'click',
+                    'name': '取消今日订单',
+                    'key': 'cancelOrder'
                 },
                 {
                     'type': 'view',
@@ -165,6 +171,59 @@ def getOrderByOpenId(request):
         data.append(" ")
         data.append(order.content)
     return HttpResponse(data)
+@csrf_exempt 
+def cancelOrder(request):
+    open_id="orAO40mRn5-WbO8d10FWwLp4g67I"
+    orders=models.orders.objects.filter(open_id=open_id,create_time__startswith=date.today())
+    ordersLen=len(orders)
+    if ordersLen==0:
+        msg="您今天没有订单"
+    else:
+        models.orders.objects.filter(open_id=open_id,create_time__startswith=date.today()).delete()
+        msg="取消订单成功"
+    return HttpResponse(msg)
+
+def getTenPage(request):
+    orders=models.orders.objects.all()
+    paginator=Paginator(orders,10)
+    orderInPage=paginator.page(2)
+    for order in orderInPage:
+        print(order.id)
+    return HttpResponse("success")
+@csrf_exempt 
+def listOrderByParams(request):
+    response_data={}
+    data=[]
+    order={}
+    dateStart="2017-09-1"
+    dateEnd="2017-09-28"
+    client_name="Zhang"
+    phone="4202"
+    pageSize=10
+    curPage=1
+    orders=models.orders.objects.filter(create_time__gt=dateStart,create_time__lt=dateEnd,client_name__contains=client_name,
+                                        phone__contains=phone)
+    allDataCount=len(orders)
+    response_data["code"]="100000"
+    response_data["msg"]="success"
+    response_data["allDataCount"]=allDataCount
+    if allDataCount==0:
+        response_data["curPageData"]=data
+    else:
+        paginator=Paginator(orders,pageSize)
+        orderInPage=paginator.page(curPage)
+        for item in orderInPage:
+            order["id"]=item.id
+            order["client_name"]=item.client_name
+            order["phone"]=item.phone
+            order["address"]=item.address
+            order["content"]=item.content
+            order["create_time"]=str(item.create_time)
+            data.append(order)
+            print(data)
+            order={}
+        response_data["curPageData"]=data
+    return HttpResponse(json.dumps(response_data),content_type="application/json")
 @csrf_exempt   
 def weixin(request):
     #设置配置信息
@@ -186,21 +245,11 @@ def weixin(request):
             print("message"+str(message))
             #自动回复图文消息
             if isinstance(message,TextMessage):
-                articles=[{
-                    'title':'第一条',
-                    'description':u'这是第一条新闻',
-                    'url': u'http://www.baidu.com/',
-                    }, {
-                        'title': u'第二条',
-                        'picurl': u'http://doraemonext.oss-cn-hangzhou.aliyuncs.com/test/wechat-test.jpg',
-                        'url': u'http://www.baidu.com/',
-                        }, {
-                            'title': u'第三条',
-                            'description': u'这是第一条新闻',
-                            'picurl': u'http://doraemonext.oss-cn-hangzhou.aliyuncs.com/test/wechat-test.jpg',
-                            'url': u'http://www.baidu.com/',
-                            }]
-                rsp=wechat.response_news(articles)
+                content=message.content
+                if content=="管理员登录":
+                    return HttpResponse(wechat.response_text("输出网址"))
+                else:
+                    return HttpResponse(wechat.response_text("请点击菜单栏操作"))
             #自动回复图片消息
             elif isinstance(message, ImageMessage):
                 rsp=wechat.response_image(message.media_id)
@@ -217,8 +266,18 @@ def weixin(request):
                     rsp=wechat.response_text("这是取消关注事件")
                 if message.type=="click":
                     print("到了click事件")
-                    
-                    if message.key=="getOrderByOpenId":
+                    if message.key=="cancelOrder":
+                        print("点击的是删除今日订单事件")
+                        open_id=message.source
+                        orders=models.orders.objects.filter(open_id=open_id,create_time__startswith=date.today())
+                        ordersLen=len(orders)
+                        if ordersLen==0:
+                            msg="您今天没有订单"
+                        else:
+                            models.orders.objects.filter(open_id=open_id,create_time__startswith=date.today()).delete()
+                            msg="取消订单成功"
+                        return HttpResponse(wechat.response_text(msg))
+                    elif message.key=="getOrderByOpenId":
                         print("点击的是查询订单事件")
                         open_id=message.source
                         data=[]
