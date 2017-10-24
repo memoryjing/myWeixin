@@ -14,12 +14,13 @@ from wechat_sdk.lib.request import WechatRequest
 
 from datetime import datetime,date
 import json
+import math
 
 
 
 # Create your views here.
 WEIXIN_TOKEN="lijingjing"
-BASE_URL="http://ee33cac6.ngrok.io"
+BASE_URL="http://186a7660.ngrok.io"
 ACCESS_TOKEN="4VCTc4mzckXznk6L8dLo7QK6NVKy2Y70f2mG3XpynQGn_IK\
             k81hNioTpxNqu3wmlVGa0hn8-JdjvtpNHlY1pv0UCFXGu7zxf0NZCbflYN3cZUXgADASNQ"
 APPID='wx09d2abcb1236f865'
@@ -31,12 +32,12 @@ MENU_DATA = {
             'type': 'view',
             'name': '在线下单',
             'key': 'V1001_YUGOU',
-            'url':'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx09d2abcb1236f865&redirect_uri=https://ee33cac6.ngrok.io/weixin/order&response_type=code&scope=snsapi_base&state=1#wechat_redirect' 
+            'url':'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx09d2abcb1236f865&redirect_uri=https://186a7660.ngrok.io&response_type=code&scope=snsapi_base&state=1#wechat_redirect' 
             #BASE_URL+'/weixin/code/'
         },
         {
             'type': 'click',
-            'name': '商品信息',
+            'name': '测试键',
             'key': 'V1001_TODAY_SINGER'
         },
         {
@@ -59,7 +60,7 @@ MENU_DATA = {
                 },
                 {
                     'type': 'click',
-                    'name': '赞一下我们',
+                    'name': '测试键',
                     'key': 'V1001_GOOD'
                 }
             ]
@@ -77,15 +78,15 @@ def orderList(request):
     return render(request,"weixin/orderList.html",{"orders":orders})
 
 def initOrderForm(request):
-#     code_get=request.GET.get("code");
-#     print("获取到的code: "+str(code_get))
-#     url='https://api.weixin.qq.com/sns/oauth2/access_token?appid='+APPID+'&secret='+APPSECRET+'&code='+code_get+'&grant_type=authorization_code'
-#     xml=urlopen(url).read().decode("utf8")
-#     doc=json.loads(xml)
-#     open_id=doc.get("openid")
-    open_id="orAO40mRn5-WbO8d10FWwLp4g67I"
-#     print("我终于拿到了openid"+str(openid))
-#     orderList=models.orders.objects.filter(open_id=open_id,create_time_startswith=datetime.date.today())
+    print("进入的是init函数")
+    code_get=request.GET.get("code")
+    print("获取到的code: "+str(code_get))
+    url='https://api.weixin.qq.com/sns/oauth2/access_token?appid='+APPID+'&secret='+APPSECRET+'&code='+str(code_get)+'&grant_type=authorization_code'
+    xml=urlopen(url).read().decode("utf8")
+    doc=json.loads(xml)
+    open_id=doc.get("openid")
+    print("我终于拿到了openid"+str(open_id))
+#     open_id="orAO40mRn5-WbO8d10FWwLp4g67I"
     orderList=models.orders.objects.filter(open_id=open_id,create_time__startswith=date.today())
     print(orderList)
     response_data={}
@@ -99,7 +100,11 @@ def initOrderForm(request):
         data["phone"]=order.phone
         data["address"]=order.address
         data["content"]=order.content   
-       
+    elif len(orderList)==0:
+        data["client_name"]=""
+        data["phone"]=""
+        data["address"]=""
+        data["content"]=""
     response_data["data"]=data
     return HttpResponse(json.dumps(response_data),content_type="application/json")
 #     return HttpResponse(orderList[0].create_time)
@@ -107,21 +112,15 @@ def initOrderForm(request):
 def saveOrder(request):
     response_data={}
     print(request.method)
-    if request.method=="GET":
-#     if request.method=="POST":
-        client_name=request.GET.get("client_name","Terry Zhang")
-        phone=request.GET.get("phone","18840823411")
-        address=request.GET.get("address","大连理工大学软件学院综合楼五楼")
+    if request.method=="POST":
+        formInfo=json.loads(request.POST.get("formInfo"))
+        print(formInfo)
+        client_name=formInfo.get("client_name")
+        phone=formInfo.get("phone","")
+        address=formInfo.get("address","")
         create_time=datetime.now()
-        content=request.GET.get("content","大料 100斤")
-        open_id=request.GET.get("open_id","orAO40mRn5-WbO8d10FWwLp4g67I")
-#         client_name=request.POST.get("formInfo").get("client_name")
-#         client_name=request.POST.get("client_name","lijingjing")
-#         phone=request.POST.get("phone","18840824202")
-#         address=request.POST.get("address","DLUT")
-#         create_time=datetime.now()
-#         content=request.POST.get("content","花椒 10")
-#         open_id=request.POST.get("open_id","orAO40mRn5-WbO8d10FWwLp4g67I")
+        content=formInfo.get("content","")
+        open_id=formInfo.get("open_id","")
         #判断数据库中是都已经存在该用户订单，根据openid
         order=models.orders.objects.filter(open_id=open_id,create_time__startswith=date.today())
         if(len(order)==0):
@@ -154,23 +153,35 @@ def saveOrder(request):
 def getOrderByOpenId(request):
     open_id="orAO40mRn5-WbO8d10FWwLp4g67I"
     data=[]
+    order=[]
     orders=models.orders.objects.filter(open_id=open_id);
     orderLen=len(orders)
     if(orderLen==0):
         msg="没有订单"
+        return HttpResponse("您还没有订单信息，快快点击在线下单订货吧~")
     elif orderLen>3:
         orders=orders[0:3]
         msg="超过三个订单"
     else:
-        msg="三个订单已下"
+        msg="三个订单以下"
     print(msg)
-    for order in orders:
-        print(order.client_name)
-        print(order.content)
-        data.append(order.client_name)
-        data.append(" ")
-        data.append(order.content)
-    return HttpResponse(data)
+    count=1
+    data.append("最近的订单信息：（最多三个）")
+    for item in orders:
+        
+        print(item.client_name)
+        print(item.content)
+        order.append("[订单序号"+str(count)+"]:")
+        order.append("客户姓名："+str(item.client_name))
+        order.append("电话："+str(item.phone))
+        order.append("收货地址："+str(item.address))
+        order.append("订单日期："+str(item.create_time))
+        order.append("订单内容:"+str(item.content))
+        append_str="\n".join(order)
+        data.append(append_str)
+        order=[]
+        count=count+1
+    return HttpResponse("\n".join(data))
 @csrf_exempt 
 def cancelOrder(request):
     open_id="orAO40mRn5-WbO8d10FWwLp4g67I"
@@ -190,25 +201,27 @@ def getTenPage(request):
     for order in orderInPage:
         print(order.id)
     return HttpResponse("success")
-@csrf_exempt 
+
+
 def listOrderByParams(request):
     response_data={}
-    data=[]
+    order_data=[]
+    data={}
     order={}
-    dateStart="2017-09-1"
-    dateEnd="2017-09-28"
-    client_name="Zhang"
-    phone="4202"
-    pageSize=10
-    curPage=1
+    dateStart=request.GET.get("dateStart")
+    dateEnd=request.GET.get("dateEnd")
+    client_name=request.GET.get("client_name")
+    phone=request.GET.get("phone")
+    pageSize=int(request.GET.get("pageSize"))
+    curPage=int(request.GET.get("curPage"))
     orders=models.orders.objects.filter(create_time__gt=dateStart,create_time__lt=dateEnd,client_name__contains=client_name,
                                         phone__contains=phone)
     allDataCount=len(orders)
     response_data["code"]="100000"
     response_data["msg"]="success"
-    response_data["allDataCount"]=allDataCount
+    data["allDataCount"]=math.ceil(allDataCount/pageSize)
     if allDataCount==0:
-        response_data["curPageData"]=data
+        data["curPageData"]=order_data
     else:
         paginator=Paginator(orders,pageSize)
         orderInPage=paginator.page(curPage)
@@ -219,10 +232,11 @@ def listOrderByParams(request):
             order["address"]=item.address
             order["content"]=item.content
             order["create_time"]=str(item.create_time)
-            data.append(order)
-            print(data)
+            order_data.append(order)
+            print(order_data)
             order={}
-        response_data["curPageData"]=data
+        data["curPageData"]=order_data
+    response_data["data"]=data
     return HttpResponse(json.dumps(response_data),content_type="application/json")
 @csrf_exempt   
 def weixin(request):
@@ -230,15 +244,16 @@ def weixin(request):
     conf=WechatConf(token=WEIXIN_TOKEN,appid=APPID,appsecret=APPSECRET,
            encrypt_mode='normal',access_token_expires_at=7200,access_token=ACCESS_TOKEN)
     wechat=WechatBasic(conf=conf)
-    print(wechat)
     #验证服务器
     if wechat.check_signature(signature=request.GET.get('signature'), 
                               timestamp=request.GET.get('timestamp'), 
                               nonce=request.GET.get('nonce')):
         print("111")
         if request.method=='GET':
+            print("是GET请求")
             rsp=request.GET.get('echostr','error')
         else:
+            print("是POST请求")
             wechat.create_menu(menu_data=MENU_DATA)
             wechat.parse_data(request.body)
             message=wechat.get_message()
@@ -247,22 +262,15 @@ def weixin(request):
             if isinstance(message,TextMessage):
                 content=message.content
                 if content=="管理员登录":
-                    return HttpResponse(wechat.response_text("输出网址"))
+                    return HttpResponse(wechat.response_text("http://186a7660.ngrok.io/#/search"))
                 else:
                     return HttpResponse(wechat.response_text("请点击菜单栏操作"))
-            #自动回复图片消息
-            elif isinstance(message, ImageMessage):
-                rsp=wechat.response_image(message.media_id)
-            #自动回复语音消息
-            elif isinstance(message, VoiceMessage) or isinstance(message, ShortVideoMessage):
-                rsp=wechat.response_voice(message.media_id)
-            elif isinstance(message, LocationMessage):
-                rsp=wechat.response_text("地理位置")
+            
             #自定义菜单事件推送
             elif isinstance(message, EventMessage):
-                if message.type=="subcribe":
-                    rsp=wechat.response_text("这是关注事件"+str(message.key))
-                if message.type=="unsubcribe":
+                if message.type=="subscribe":
+                    rsp=wechat.response_text("欢迎关注我的微信公众号~\n在这里你可以轻松地下订单")
+                if message.type=="unsubscribe":
                     rsp=wechat.response_text("这是取消关注事件")
                 if message.type=="click":
                     print("到了click事件")
@@ -272,10 +280,10 @@ def weixin(request):
                         orders=models.orders.objects.filter(open_id=open_id,create_time__startswith=date.today())
                         ordersLen=len(orders)
                         if ordersLen==0:
-                            msg="您今天没有订单"
+                            msg="您今天还没有订单呢~"
                         else:
                             models.orders.objects.filter(open_id=open_id,create_time__startswith=date.today()).delete()
-                            msg="取消订单成功"
+                            msg="您成功取消今日订单"
                         return HttpResponse(wechat.response_text(msg))
                     elif message.key=="getOrderByOpenId":
                         print("点击的是查询订单事件")
@@ -310,15 +318,15 @@ def weixin(request):
                             count=count+1
                         rsp=wechat.response_text("\n".join(data))
                     else:   
-                        rsp=wechat.response_text(message.source)
+                        rsp=wechat.response_text("测试键~你的openid是："+str(message.source))
                 if message.type=="view":
                     open_id=message.source;
                     print("view事件中的openid="+str(open_id))
                     rsp=wechat.response_text("自定义菜单跳转链接事件"+str(message.source))
             
-            #自动回复空消息
+            #自动回复其他消息
             else:
-                rsp=wechat.response_none()
+                wechat.response_text("请点击菜单栏操作")
     else:
         rsp=wechat.response_text('check error')
     return HttpResponse(rsp)
