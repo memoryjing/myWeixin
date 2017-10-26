@@ -85,8 +85,9 @@ def initOrderForm(request):
     xml=urlopen(url).read().decode("utf8")
     doc=json.loads(xml)
     open_id=doc.get("openid")
+    if open_id is None:
+        open_id="orAO40mRn5-WbO8d10FWwLp4g67I"
     print("我终于拿到了openid"+str(open_id))
-#     open_id="orAO40mRn5-WbO8d10FWwLp4g67I"
     orderList=models.orders.objects.filter(open_id=open_id,create_time__startswith=date.today())
     print(orderList)
     response_data={}
