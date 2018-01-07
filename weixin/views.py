@@ -20,7 +20,7 @@ import math
 
 # Create your views here.
 WEIXIN_TOKEN="lijingjing"
-BASE_URL="http://186a7660.ngrok.io"
+BASE_URL="http://www.tiaoliaopifawang.cn"
 ACCESS_TOKEN="4VCTc4mzckXznk6L8dLo7QK6NVKy2Y70f2mG3XpynQGn_IK\
             k81hNioTpxNqu3wmlVGa0hn8-JdjvtpNHlY1pv0UCFXGu7zxf0NZCbflYN3cZUXgADASNQ"
 APPID='wx09d2abcb1236f865'
@@ -32,7 +32,7 @@ MENU_DATA = {
             'type': 'view',
             'name': '在线下单',
             'key': 'V1001_YUGOU',
-            'url':'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx09d2abcb1236f865&redirect_uri=https://186a7660.ngrok.io&response_type=code&scope=snsapi_base&state=1#wechat_redirect' 
+            'url':'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx09d2abcb1236f865&redirect_uri=https://www.tiaoliaopifawang.cn&response_type=code&scope=snsapi_base&state=1#wechat_redirect' 
             #BASE_URL+'/weixin/code/'
         },
         {
@@ -263,7 +263,7 @@ def weixin(request):
             if isinstance(message,TextMessage):
                 content=message.content
                 if content=="管理员登录":
-                    return HttpResponse(wechat.response_text("http://186a7660.ngrok.io/#/search"))
+                    return HttpResponse(wechat.response_text("http://www.tiaoliaopifawang.cn/#/search"))
                 else:
                     return HttpResponse(wechat.response_text("请点击菜单栏操作"))
             
