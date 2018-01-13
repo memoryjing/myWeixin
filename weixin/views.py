@@ -33,7 +33,7 @@ MENU_DATA = {
             'name': '在线下单',
             'key': 'V1001_YUGOU',
             #'url':'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx09d2abcb1236f865&redirect_uri=https://www.tiaoliaopifawang.cn&response_type=code&scope=snsapi_base&state=1#wechat_redirect' 
-            'url':'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx09d2abcb1236f865&redirect_uri=https://www.tiaoliaopifawang.cn/#/weixin/wx&response_type=code&scope=snsapi_base&state=1#wechat_redirect' 
+            'url':'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx09d2abcb1236f865&redirect_uri=https://www.tiaoliaopifawang.cn/&response_type=code&scope=snsapi_base&state=1#wechat_redirect' 
             #BASE_URL+'/weixin/code/'
         },
         {
