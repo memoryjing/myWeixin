@@ -44,6 +44,11 @@ MENU_DATA = {
         {
             'name': '个人中心',
             'sub_button': [
+{
+                    'type': 'click',
+                    'name': '在线下单',
+                    'key': 'initOrderForm'
+                },
                 {
                     'type': 'click',
                     'name': '我的订单',
