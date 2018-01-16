@@ -32,7 +32,7 @@ MENU_DATA = {
             'type': 'view',
             'name': '在线下单',
             'key': 'V1001_YUGOU',
-            'url':'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx09d2abcb1236f865&redirect_uri=https://www.tiaoliaopifawang.cn/#/weixin/wx&response_type=code&scope=snsapi_base&state=1#wechat_redirect' 
+            'url':'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx09d2abcb1236f865&redirect_uri=http://www.tiaoliaopifawang.cn/#/&response_type=code&scope=snsapi_base&state=1#wechat_redirect' 
 #             'url':'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx09d2abcb1236f865&redirect_uri=http%3A%2F%2Ftiaoliaopifawang.cn%2F#%2Fweixin%2Fwx%2F&response_type=code&scope=snsapi_base&state=1#wechat_redirect' 
             #BASE_URL+'/weixin/code/'
         },
@@ -97,7 +97,7 @@ def initOrderForm(request):
     orderList=models.orders.objects.filter(open_id=open_id,create_time__startswith=date.today())
     print(orderList)
     response_data={}
-    data={}
+    data={} 
     data["open_id"]=str(open_id);
     response_data["code"]="100000"
     response_data["msg"]="success"
