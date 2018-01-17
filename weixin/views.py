@@ -122,8 +122,9 @@ def saveOrder(request):
     response_data={}
     print(request.method)
     if request.method=="POST":
+        print("saveOrder request")
         formInfo=json.loads(request.POST.get("formInfo"))
-        print(formInfo)
+        print("显示的是forminfo："+str(formInfo))
         client_name=formInfo.get("client_name")
         phone=formInfo.get("phone","")
         address=formInfo.get("address","")
