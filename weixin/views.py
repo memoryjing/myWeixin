@@ -126,6 +126,7 @@ def saveOrder(request):
         formInfo=json.loads(request.POST.get("formInfo"))
         print("显示的是forminfo："+str(formInfo))
         client_name=formInfo.get("client_name")
+        print("client_name:"+str(client_name))
         phone=formInfo.get("phone","")
         address=formInfo.get("address","")
         create_time=datetime.now()
@@ -145,7 +146,7 @@ def saveOrder(request):
             time=order[0].time
             if time>=3:
                 response_data["code"]="100001"
-                msg="创建订单失败，每天最多三个订单"
+                msg="创建订单失败，每天最多三个订单，可在取消订单后重新提交"
                 print(msg)
                 print(type(msg))
                 response_data["msg"]=msg
