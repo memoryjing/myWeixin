@@ -315,9 +315,10 @@ def weixin(request):
                             print(item.content)
                             order.append("[订单序号"+str(count)+"]:")
                             order.append("客户姓名："+str(item.client_name))
-                            order.append("电话："+str(item.phone))
+                            order.append("电       话："+str(item.phone))
                             order.append("收货地址："+str(item.address))
                             order.append("订单内容:"+str(item.content))
+                            order.append("订单时间:"+str(item.create_time))
                             append_str="\n".join(order)
                             data.append(append_str)
                             order=[]
