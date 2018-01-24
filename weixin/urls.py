@@ -34,6 +34,6 @@ urlpatterns = [
     url(r'^aj/listOrderByParams/', views.listOrderByParams, name='listOrderByParams'),
     url(r'^aj/getTenPage', views.getTenPage, name='getTenPage'),
     url(r'^order/list$', views.orderList, name='orderList'),
-    url(r'^aj/createTimeTest$', views.createTimeTest, name='createTimeTest'),
+    
 
 ]
