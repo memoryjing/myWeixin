@@ -13,6 +13,7 @@ from wechat_sdk import WechatConf
 from wechat_sdk.lib.request import WechatRequest
 
 from datetime import datetime,date
+import time as time_lib
 import json
 import math
 
@@ -113,6 +114,11 @@ def initOrderForm(request):
     return HttpResponse(json.dumps(response_data),content_type="application/json")
 #     return HttpResponse(orderList[0].create_time)
 @csrf_exempt
+def createTimeTest(request):
+    create_time=datetime.fromtimestamp(time_lib.time())
+    return HttpResponse(json.dumps(str(create_time)),content_type="application/json")
+
+@csrf_exempt
 def saveOrder(request):
     response_data={}
     print(request.method)
@@ -124,7 +130,8 @@ def saveOrder(request):
         print("client_name:"+str(client_name))
         phone=formInfo.get("phone","")
         address=formInfo.get("address","")
-        create_time=datetime.now()
+#         create_time=datetime.now()
+        create_time=datetime.fromtimestamp(time_lib.time())
         content=formInfo.get("content","")
         open_id=formInfo.get("open_id","")
         #判断数据库中是都已经存在该用户订单，根据openid
