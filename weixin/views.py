@@ -328,7 +328,7 @@ def weixin(request):
                     return HttpResponse(wechat.response_text("请点击菜单栏操作"))
             #自动回复音频消息
             if isinstance(message,VoiceMessage):
-                media_id=content.media_id
+                media_id=message.media_id
                 return HttpResponse(wechat.response_voice(media_id))
             #自定义菜单事件推送
             elif isinstance(message, EventMessage):
