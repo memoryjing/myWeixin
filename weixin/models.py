@@ -34,6 +34,7 @@ class orders(models.Model):
     phone = models.CharField(max_length=11,null=False)            #电话
     address = models.CharField(max_length=150,null=False)          #地址
     content = models.CharField(max_length=500,blank=True)          #备注  备注就是用户要填写的内容
+    videoId=models.CharField(max_length=256,blank=True)
     create_time = models.DateTimeField(null=True,blank=True)      #订单创建时间
     time = models.IntegerField(null=True,blank=True)                     #? 不可空，数字，1,2,3
     open_id=models.CharField(max_length=100,null=True,blank=True)         # ？ open_id, 长度未定？ 不可空

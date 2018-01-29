@@ -177,7 +177,7 @@ def getOrderByOpenId(request):
     for item in orders:
         
         print(item.client_name)
-        print(item.content)
+        print(item.create_time)
         order.append("[订单序号"+str(count)+"]:")
         order.append("客户姓名："+str(item.client_name))
         order.append("电话："+str(item.phone))
@@ -245,6 +245,7 @@ def listOrderByParams(request):
         data["curPageData"]=order_data
     response_data["data"]=data
     return HttpResponse(json.dumps(response_data),content_type="application/json")
+
 @csrf_exempt   
 def weixin(request):
     #设置配置信息
