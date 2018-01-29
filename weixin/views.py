@@ -13,6 +13,7 @@ from wechat_sdk import WechatConf
 from wechat_sdk.lib.request import WechatRequest
 
 from datetime import datetime,date
+import time as time_lib
 import json
 import math
 
@@ -112,6 +113,59 @@ def initOrderForm(request):
     response_data["data"]=data
     return HttpResponse(json.dumps(response_data),content_type="application/json")
 #     return HttpResponse(orderList[0].create_time)
+
+@csrf_exempt
+def saveOrder2(request):
+    response_data={}
+    print(request.method)
+    if request.method=="POST":
+        print("saveOrder request")
+        formInfo=json.loads(request.POST.get("formInfo"))
+        print("显示的是forminfo："+str(formInfo))
+        client_name=formInfo.get("client_name")
+        print("client_name:"+str(client_name))
+        phone=formInfo.get("phone","")
+        address=formInfo.get("address","")
+        content=formInfo.get("content","")
+        audioId=formInfo.get("audioId","")
+        create_time=datetime.fromtimestamp(time_lib.time())
+        open_id=formInfo.get("open_id","")
+        if audioId=="" and content=="":
+            response_data["code"]="100001"
+            msg="保存失败，请录音获填写商品详情"
+            print(msg)
+            response_data["msg"]=msg
+            return HttpResponse(json.dumps(response_data),content_type="application/json")
+        #判断数据库中是都已经存在该用户订单，根据openid
+        order=models.orders.objects.filter(open_id=open_id,create_time__startswith=date.today())
+        if(len(order)==0):
+            time=1
+            print("没有该用户的订单")
+            models.orders.objects.create(client_name=client_name,phone=phone,address=address,create_time=create_time,
+                                         content=content,audioId=audioId,open_id=open_id,time=time)
+            response_data["code"]="100000"
+            msg="第"+str(time)+"次创建订单成功"
+            response_data["msg"]=msg
+        else:
+            time=order[0].time
+            if time>=3:
+                response_data["code"]="100001"
+                msg="创建订单失败，每天最多三个订单，可在取消订单后重新提交"
+                print(msg)
+                print(type(msg))
+                response_data["msg"]=msg
+            else:
+                time=time+1
+                models.orders.objects.filter(open_id=open_id,create_time__startswith=date.today())\
+                            .update(client_name=client_name,phone=phone,address=address,create_time=create_time,
+                                         content=content,audioId=audioId,open_id=open_id,time=time)
+                response_data["code"]="100000"
+                msg="第"+str(time)+"次创建订单成功"
+                print(msg)
+                response_data["msg"]=msg
+    return HttpResponse(json.dumps(response_data),content_type="application/json")
+
+
 @csrf_exempt
 def saveOrder(request):
     response_data={}
@@ -124,8 +178,8 @@ def saveOrder(request):
         print("client_name:"+str(client_name))
         phone=formInfo.get("phone","")
         address=formInfo.get("address","")
-        create_time=datetime.now()
         content=formInfo.get("content","")
+        create_time=datetime.fromtimestamp(time_lib.time())
         open_id=formInfo.get("open_id","")
         #判断数据库中是都已经存在该用户订单，根据openid
         order=models.orders.objects.filter(open_id=open_id,create_time__startswith=date.today())
@@ -176,7 +230,7 @@ def getOrderByOpenId(request):
     for item in orders:
         
         print(item.client_name)
-        print(item.content)
+        print(item.create_time)
         order.append("[订单序号"+str(count)+"]:")
         order.append("客户姓名："+str(item.client_name))
         order.append("电话："+str(item.phone))
@@ -244,6 +298,7 @@ def listOrderByParams(request):
         data["curPageData"]=order_data
     response_data["data"]=data
     return HttpResponse(json.dumps(response_data),content_type="application/json")
+
 @csrf_exempt   
 def weixin(request):
     #设置配置信息
@@ -271,7 +326,10 @@ def weixin(request):
                     return HttpResponse(wechat.response_text("http://www.tiaoliaopifawang.cn/#/search"))
                 else:
                     return HttpResponse(wechat.response_text("请点击菜单栏操作"))
-            
+            #自动回复音频消息
+            if isinstance(message,VoiceMessage):
+                media_id=message.media_id
+                return HttpResponse(wechat.response_voice(media_id))
             #自定义菜单事件推送
             elif isinstance(message, EventMessage):
                 if message.type=="subscribe":
@@ -315,9 +373,10 @@ def weixin(request):
                             print(item.content)
                             order.append("[订单序号"+str(count)+"]:")
                             order.append("客户姓名："+str(item.client_name))
-                            order.append("电话："+str(item.phone))
+                            order.append("电       话："+str(item.phone))
                             order.append("收货地址："+str(item.address))
                             order.append("订单内容:"+str(item.content))
+                            order.append("订单时间:"+str(item.create_time))
                             append_str="\n".join(order)
                             data.append(append_str)
                             order=[]
