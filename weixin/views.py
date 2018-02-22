@@ -105,11 +105,13 @@ def initOrderForm(request):
         data["phone"]=order.phone
         data["address"]=order.address
         data["content"]=order.content   
+        data["audioId"]=order.audioId
     elif len(orderList)==0:
         data["client_name"]=""
         data["phone"]=""
         data["address"]=""
         data["content"]=""
+        data["audioId"]=""
     response_data["data"]=data
     return HttpResponse(json.dumps(response_data),content_type="application/json")
 #     return HttpResponse(orderList[0].create_time)
