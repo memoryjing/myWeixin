@@ -377,13 +377,13 @@ def weixin(request):
                             
                             print(item.client_name)
                             print(item.content)
-                            print(item.create_time[0:19])
+                            print(item.create_time.strftime("%Y-%m-%d %H:%M:%S"))
                             order.append("[订单序号"+str(count)+"]:")
                             order.append("客户姓名："+str(item.client_name))
                             order.append("电       话："+str(item.phone))
                             order.append("收货地址："+str(item.address))
                             order.append("订单内容:"+str(item.content))
-                            order.append("订单时间:"+str(item.create_time[0:19]))
+                            order.append("订单时间:"+str(item.create_time.strftime("%Y-%m-%d %H:%M:%S")))
                             append_str="\n".join(order)
                             data.append(append_str)
                             order=[]
