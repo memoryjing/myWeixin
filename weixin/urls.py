@@ -25,6 +25,7 @@ urlpatterns = [
 #     url(r'^ciyun/$', views.ciyun, name='ciyun'),
 #     url(r'^getciyun/$', views.getciyun, name='getciyun'),
     #Î¢ÐÅ
+    url(r'^jssdkconfig/$', views.jssdkconfig, name='main'), #jssdk ×¢Èë
     url(r'^main/$', views.main, name='main'),
     url(r'^wx/$', views.weixin, name='weixin'),
     url(r'^aj/initOrderForm/$', views.initOrderForm, name='initOrderForm'),
@@ -34,6 +35,6 @@ urlpatterns = [
     url(r'^aj/listOrderByParams/', views.listOrderByParams, name='listOrderByParams'),
     url(r'^aj/getTenPage', views.getTenPage, name='getTenPage'),
     url(r'^order/list$', views.orderList, name='orderList'),
-    
+
 
 ]

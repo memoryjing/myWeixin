@@ -26,9 +26,7 @@ ACCESS_TOKEN="4VCTc4mzckXznk6L8dLo7QK6NVKy2Y70f2mG3XpynQGn_IK\
             k81hNioTpxNqu3wmlVGa0hn8-JdjvtpNHlY1pv0UCFXGu7zxf0NZCbflYN3cZUXgADASNQ"
 APPID='wx09d2abcb1236f865'
 APPSECRET='720546183b347b96917a7408a27e8418'
-#客户
-# APPID='wx2cf267cdd0331edf'
-# APPSECRET='fe4412c5d91035d142d95f7bc85da562'
+
 #自定义菜单
 MENU_DATA = {
         'button':[
@@ -74,6 +72,10 @@ MENU_DATA = {
     ]
     }
 
+def jssdkconfig(request):
+    url = request.GET.get("url")
+
+    return 
 
 def main(request):
     
@@ -84,7 +86,7 @@ def orderList(request):
     return render(request,"weixin/orderList.html",{"orders":orders})
 
 def initOrderForm(request):
-    print("进入的是init函数")
+    print("进入的是initOrderForm函数")
     code_get=request.GET.get("code")
     print("获取到的code: "+str(code_get))
     url='https://api.weixin.qq.com/sns/oauth2/access_token?appid='+APPID+'&secret='+APPSECRET+'&code='+str(code_get)+'&grant_type=authorization_code'
@@ -94,7 +96,7 @@ def initOrderForm(request):
     if open_id is None:
         print("openid为空")
         open_id="orAO40mRn5-WbO8d10FWwLp4g67I"
-    print("我终于拿到了openid"+str(open_id))
+    print("openid:"+str(open_id))
     orderList=models.orders.objects.filter(open_id=open_id,create_time__startswith=date.today())
     print(orderList)
     response_data={}
@@ -216,6 +218,7 @@ def saveOrder(request):
     return HttpResponse(json.dumps(response_data),content_type="application/json")
 @csrf_exempt
 def getOrderByOpenId(request):
+    print("进入的是getOrderByOpenId函数")
     open_id="orAO40mRn5-WbO8d10FWwLp4g67I"
     data=[]
     order=[]
@@ -378,7 +381,7 @@ def weixin(request):
                             print(item.client_name)
                             print(item.content)
                             print(item.create_time.strftime("%Y-%m-%d %H:%M:%S"))
-                            order.append("[订单序号"+str(count)+"]:")
+                            order.append("[订单"+str(count)+"]:")
                             order.append("客户姓名："+str(item.client_name))
                             order.append("电       话："+str(item.phone))
                             order.append("收货地址："+str(item.address))
