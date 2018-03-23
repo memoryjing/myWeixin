@@ -65,6 +65,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'weixin.wx_token.getSignPackage',
             ],
         },
     },
@@ -130,3 +131,6 @@ STATIC_URL = '/static/'
 # STATIC_PATH = (os.path.join(os.path.dirname(__file__), '../static/').replace('\\','/'))
 # STATIC_PATH= os.path.join(BASE_DIR,'/static').replace('\\','/')
 STATICFILES_DIRS = (os.path.join(os.path.dirname(__file__), '../static/').replace('\\','/'),)
+
+APPID='wx09d2abcb1236f865'
+APPSECRET='720546183b347b96917a7408a27e8418'

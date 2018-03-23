@@ -47,5 +47,31 @@ class orderGoods(models.Model):
     order_id = models.CharField(max_length=12,null=False)          #订单ID 外键
     goods_id = models.CharField(max_length=12,null=False)          #商品ID 外键
     weight = models.PositiveIntegerField(default=0,null=False)     #重量，单位：斤
-        
-        
+
+from django.utils import timezone
+# 关于 JSSDK，记录流 和时间 。这个流是有时效的，超时就无效
+class WxToken(models.Model):
+    token = models.CharField(max_length=200)
+    lifetime = models.DateTimeField(
+        default=0
+    )
+    def get_date(self):
+        delta = timezone.now() - self.lifetime
+        if delta.seconds < 6000:
+            return True
+        else:
+            return False
+
+
+class JsToken(models.Model):
+    token = models.CharField(max_length=200)
+    lifetime = models.DateTimeField(
+        default=0
+    )
+
+    def get_date(self):
+        delta = timezone.now() - self.lifetime
+        if delta.seconds < 6000:
+            return True
+        else:
+            return False

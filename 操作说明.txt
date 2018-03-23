@@ -1,6 +1,8 @@
 Python3.5 django1.11
 数据库：本地Mysql数据库
 
+demjson
+
 网页运行方式：
 
 1.cmd进入manage.py同级目录，运行Python manage.py runserver 80命令，启动django自带服务。
