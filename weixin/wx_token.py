@@ -41,7 +41,7 @@ def getSignPackage(request):
     }
 
     string = '&'.join(['%s=%s' % (key.lower(), ret[key]) for key in sorted(ret)])
-    signature = hashlib.sha1(string).hexdigest()
+    signature = hashlib.sha1(string.encode("utf-8")).hexdigest()
 
     signPackage = {
         "appId": Setting.APPID,

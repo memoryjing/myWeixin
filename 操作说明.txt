@@ -1,7 +1,6 @@
-Python3.5 django1.11
-数据库：本地Mysql数据库
-
-demjson
+1、Python3.5 django1.11
+2、数据库：本地Mysql数据库
+3、安装demjson  ，命令: pip install demjson
 
 网页运行方式：
 
