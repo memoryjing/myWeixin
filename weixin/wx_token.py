@@ -51,7 +51,7 @@ def getSignPackage(request):
         "signature": signature,
         "rawString": string
     }
-    print("signPackage:"+signPackage)
+    print("signPackage:",signPackage)
     return signPackage;
 
 #生成签名的随机串
