@@ -16,7 +16,7 @@ from datetime import datetime,date
 import time as time_lib
 import json
 import math
-
+import myWeixin.settings as Setting
 
 
 # Create your views here.
@@ -24,8 +24,10 @@ WEIXIN_TOKEN="lijingjing"
 BASE_URL="http://www.tiaoliaopifawang.cn"
 ACCESS_TOKEN="4VCTc4mzckXznk6L8dLo7QK6NVKy2Y70f2mG3XpynQGn_IK\
             k81hNioTpxNqu3wmlVGa0hn8-JdjvtpNHlY1pv0UCFXGu7zxf0NZCbflYN3cZUXgADASNQ"
-APPID='wx09d2abcb1236f865'
-APPSECRET='720546183b347b96917a7408a27e8418'
+# APPID='wx09d2abcb1236f865'
+# APPSECRET='720546183b347b96917a7408a27e8418'
+APPID=Setting.APPID
+APPSECRET=Setting.APPSECRET
 
 #自定义菜单
 MENU_DATA = {

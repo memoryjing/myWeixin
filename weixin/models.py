@@ -49,7 +49,7 @@ class orderGoods(models.Model):
     weight = models.PositiveIntegerField(default=0,null=False)     #重量，单位：斤
 
 from django.utils import timezone
-# 关于 JSSDK，记录流 和时间 。这个流是有时效的，超时就无效
+# 关于 JSSDK，记录流 和时间 。这个流是有时效的，超过2小时就无效
 class WxToken(models.Model):
     token = models.CharField(max_length=200)
     lifetime = models.DateTimeField(

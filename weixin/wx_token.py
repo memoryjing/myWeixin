@@ -14,6 +14,7 @@ import string
 
 import django.utils.timezone as timezone
 from .models import WxToken, JsToken
+import myWeixin.settings as Setting
 
 
 def getSignPackage(request):
@@ -43,15 +44,17 @@ def getSignPackage(request):
     signature = hashlib.sha1(string).hexdigest()
 
     signPackage = {
-        "appId": '写自己的',
+        "appId": Setting.APPID,
         "nonceStr": nonceStr,
         "timestamp": timestamp,
         "url": url,
         "signature": signature,
         "rawString": string
     }
+    print("signPackage:"+signPackage)
     return signPackage;
 
+#生成签名的随机串
 def createNonceStr(length = 16):
     #获取noncestr（随机字符串）
     return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(15))
@@ -63,7 +66,7 @@ def getJsApiTicket():
     # 获取access_token
     try:
         ticket = WxToken.objects.all()[0]
-        if ticket.get_date():
+        if ticket.get_date():  #判断时间是否有效
             return ticket.token
     except:
         ticket = WxToken()
@@ -83,16 +86,17 @@ def getJsApiTicket():
 
     return str(res['ticket'])
 
-
+#先获取access_token
 def accesstokens():
     try:
         accesstoken = JsToken.objects.all()[0]
-        if accesstoken.get_date():
+        if accesstoken.get_date(): #判断时间是否有效
             return accesstoken.token
     except:
         accesstoken = JsToken()
 
-    url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=写自己的&secret=写自己的'
+    # url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=写自己的&secret=写自己的'
+    url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='+Setting.APPID+'&secret='+Setting.APPSECRET
 
     req = urllib.request.Request(url)
     data = urllib.request.urlopen(req)
