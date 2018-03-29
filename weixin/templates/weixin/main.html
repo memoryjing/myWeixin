@@ -12,7 +12,49 @@
 
 </div>
 	<script src="/static/dist/build.js"></script>
-
     <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript">
+        wx.config({  //注册权限
+            debug: true,  //调式模式，设置为ture后会直接在网页上弹出调试信息，用于排查问题
+            appId: {{ appId }},
+            timestamp: {{ timestamp }},
+            nonceStr: '{{ nonceStr }}',
+            signature: '{{ signature }}',
+            jsApiList: [  //需要使用的网页服务接口
+                'checkJsApi',  //判断当前客户端版本是否支持指定JS接口
+                'startRecord', // 音频
+                'stopRecord', //
+                'onVoiceRecordEnd',  //
+                'playVoice' ,//
+                'pauseVoice' ,//
+                'stopVoice' ,//
+                'onVoicePlayEnd' ,//
+                'uploadVoice' ,//
+                'downloadVoice' ,//
+                'translateVoice' //
+            ]
+        });
+
+        wx.ready(function(){    //验证是否成功注册
+            wx.checkJsApi({  //验证是否支持接口
+                    jsApiList: [
+                      'startRecord',"stopRecord","onVoiceRecordEnd","playVoice",
+                        "pauseVoice","stopVoice","onVoicePlayEnd","uploadVoice",
+                        "downloadVoice","translateVoice"
+                    ],
+                    success: function (res) {
+                        //alert(JSON.stringify(res));  //之后可以注释掉
+                        console.log("支持音频接口！");
+                        console.log(JSON.stringify(res));
+                    }
+                });
+
+        });
+        wx.error(function (res) {  //
+            alert(res.errMsg);  //打印错误消息。及把 debug:false,设置为debug:ture就可以直接在网页上看到弹出的错误提示
+        });
+
+
+    </script>
 </body>
 </html>
