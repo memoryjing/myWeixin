@@ -136,7 +136,8 @@ def saveOrder2(request):
         phone=formInfo.get("phone","")
         address=formInfo.get("address","")
         content=formInfo.get("content","")
-        audioId=formInfo.get("audioId","")
+        #audioId=formInfo.get("audioId","")
+        audioId=formInfo.get("voiceId","")
         create_time=datetime.fromtimestamp(time_lib.time())
         open_id=formInfo.get("open_id","")
         if audioId=="" and content=="":
