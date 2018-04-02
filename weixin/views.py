@@ -113,12 +113,15 @@ def initOrderForm(request):
         data["address"]=order.address
         data["content"]=order.content   
         data["audioId"]=order.audioId
+        data["voiceId"]=order.audioId  #这个字段和audioId存储的数据一样。数据库里没有这个字段
+        print("audioId:"+order.audioId)
     elif len(orderList)==0:
         data["client_name"]=""
         data["phone"]=""
         data["address"]=""
         data["content"]=""
         data["audioId"]=""
+        data["voiceId"]=""
     response_data["data"]=data
     return HttpResponse(json.dumps(response_data),content_type="application/json")
 #     return HttpResponse(orderList[0].create_time)
@@ -136,7 +139,6 @@ def saveOrder2(request):
         phone=formInfo.get("phone","")
         address=formInfo.get("address","")
         content=formInfo.get("content","")
-        #audioId=formInfo.get("audioId","")
         audioId=formInfo.get("voiceId","")
         create_time=datetime.fromtimestamp(time_lib.time())
         open_id=formInfo.get("open_id","")
@@ -305,6 +307,7 @@ def listOrderByParams(request):
             order["content"]=item.content
             order["create_time"]=str(item.create_time)
             order["audioId"] = str(item.audioId)
+            order["voiceId"] = str(item.audioId)
             order_data.append(order)
             print(order_data)
             order={}
