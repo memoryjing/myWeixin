@@ -288,6 +288,7 @@ def listOrderByParams(request):
     orders=models.orders.objects.filter(create_time__gt=dateStart,create_time__lt=dateEnd,client_name__contains=client_name,
                                         phone__contains=phone)
     allDataCount=len(orders)
+    print(allDataCount)
     response_data["code"]="100000"
     response_data["msg"]="success"
     data["allDataCount"]=math.ceil(allDataCount/pageSize)
