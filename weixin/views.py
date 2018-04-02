@@ -11,8 +11,8 @@ from wechat_sdk.messages import ImageMessage, TextMessage, VoiceMessage, EventMe
     LocationMessage, ShortVideoMessage
 from wechat_sdk import WechatConf
 from wechat_sdk.lib.request import WechatRequest
-
-from datetime import datetime,date
+import datetime
+from datetime import date
 import time as time_lib
 import json
 import math
@@ -140,7 +140,7 @@ def saveOrder2(request):
         address=formInfo.get("address","")
         content=formInfo.get("content","")
         audioId=formInfo.get("voiceId","")
-        create_time=datetime.fromtimestamp(time_lib.time())
+        create_time=datetime.datetime.fromtimestamp(time_lib.time())
         open_id=formInfo.get("open_id","")
         if audioId=="" and content=="":
             response_data["code"]="100001"
@@ -191,7 +191,7 @@ def saveOrder(request):
         phone=formInfo.get("phone","")
         address=formInfo.get("address","")
         content=formInfo.get("content","")
-        create_time=datetime.fromtimestamp(time_lib.time())
+        create_time=datetime.datetime.fromtimestamp(time_lib.time())
         open_id=formInfo.get("open_id","")
         #判断数据库中是都已经存在该用户订单，根据openid
         order=models.orders.objects.filter(open_id=open_id,create_time__startswith=date.today())
@@ -287,10 +287,12 @@ def listOrderByParams(request):
     phone=request.GET.get("phone")
     pageSize=int(request.GET.get("pageSize"))
     curPage=int(request.GET.get("curPage"))
-    orders=models.orders.objects.filter(create_time__gt=dateStart,create_time__lt=dateEnd,client_name__contains=client_name,
-                                        phone__contains=phone)
+    dateEnd = datetime.datetime.strptime(dateEnd,'%Y-%m-%d')+ datetime.timedelta(days=1)  #加一天
+    dateEnd=dateEnd.strftime("%Y-%m-%d")
+    orders = models.orders.objects.filter(create_time__range=[dateStart,dateEnd],
+                                          client_name__contains=client_name,
+                                          phone__contains=phone)
     allDataCount=len(orders)
-    print(allDataCount)
     response_data["code"]="100000"
     response_data["msg"]="success"
     data["allDataCount"]=math.ceil(allDataCount/pageSize)
@@ -315,6 +317,7 @@ def listOrderByParams(request):
     response_data["data"]=data
     return HttpResponse(json.dumps(response_data),content_type="application/json")
 
+#公众号对话框按钮 :
 @csrf_exempt   
 def weixin(request):
     #设置配置信息
