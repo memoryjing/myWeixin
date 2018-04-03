@@ -134,3 +134,13 @@ STATICFILES_DIRS = (os.path.join(os.path.dirname(__file__), '../static/').replac
 
 APPID='wx09d2abcb1236f865'
 APPSECRET='720546183b347b96917a7408a27e8418'
+
+#管理员open_id 列表
+ADMIN_OPEN_ID=[
+    "orAO40oUHUOvCWfDq_dBBzd-Yhf8"  #gpf
+    "orAO40pXX3hHZK4L8rp2Cs8AiA_g"  #gzy
+               ,"orAO40mRn5-WbO8d10FWwLp4g67I" #wj
+               ,"orAO40oUHUOvCWfDq_dBBzd-Yhf8" #ljj
+
+
+               ]

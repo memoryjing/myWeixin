@@ -341,8 +341,13 @@ def weixin(request):
             #自动回复图文消息
             if isinstance(message,TextMessage):
                 content=message.content
+                open_id = message.source
                 if content=="管理员登录":
-                    return HttpResponse(wechat.response_text("http://www.tiaoliaopifawang.cn/#/search"))
+                    openIds=Setting.ADMIN_OPEN_ID  #管理员 open_id 列表
+                    if open_id in openIds:
+                        return HttpResponse(wechat.response_text("http://www.tiaoliaopifawang.cn/#/search"))
+                    else:
+                        return HttpResponse(wechat.response_text("对不起,您无权获取管理员页面!"))
                 else:
                     return HttpResponse(wechat.response_text("请点击菜单栏操作"))
             #自动回复音频消息
